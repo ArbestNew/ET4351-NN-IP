@@ -1,3 +1,6 @@
+git pull
+sh clean.sh
+
 cd sw
 pwd
 make

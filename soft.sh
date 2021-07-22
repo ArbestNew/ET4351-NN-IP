@@ -1,3 +1,9 @@
-make --makefile="./sw/Makefile"
-make --makefile="./tb/Makefile"
-./tb/sctop ./sw/app.elf
+cd sw
+pwd
+make
+
+cd ../tb
+pwd
+make
+
+./sctop ../sw/app.elf

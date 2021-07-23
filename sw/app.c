@@ -40,7 +40,7 @@ int main()
 
     enableIRQ(); // Enable interruptions
 
-    print_str("Software begins\n");
+    print_str("\n\n ===== Software begins ===== \n\n");
 
     /*** Place your code here: ***/
     // Example code:
@@ -64,7 +64,7 @@ int main()
     }
 
     // Example code for printing the data read from file:
-    print_str("Read from the rfile.txt file:\n");
+    print_str("[Read] rfile.txt file:\n");
     for (i = 0; i < 20/* RFILE_SIZE*4 too long */; i++)
     {
         if( RFILE[i] == '\0' )
@@ -77,7 +77,7 @@ int main()
 
     // Example code of writing in an IP register a starting run flag:
     SYS_MEM32((SYS_AXI_BASE ) ) = 0x80; // Example run IP flag
-    print_str("Run IP \n");
+    print_str("[Write] IP \n");
 
     while (Iflag); // Whait for an interruption
 

@@ -9,4 +9,4 @@ cd ../tb
 pwd
 make
 
-./sctop ../sw/app.elf
+./sctop ../sw/app.elf | tee ../soft_result

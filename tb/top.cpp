@@ -129,7 +129,7 @@ public:
     // Examples of files directly mapped on the TLM bus:
     Memory rfile_mem; // Memory to be associate to rfile.txt for reading
     Memory wfile_mem; // Memory to be associate to wfile.out for writing
-    Memory rwnum_mem; // Memory to be associate to rwnum.txt and rwnum.out for reading and writing
+    // Memory rwnum_mem; // Memory to be associate to rwnum.txt and rwnum.out for reading and writing
 
     // Example of an IP connected on the AXI bus:
     // It is connected through the AXISlave interface.
@@ -151,10 +151,10 @@ public:
         // Read input txt files and associate them to their Memory modules:
 /*** START OF EDITABLE SECTION ***/
 
-        rfile_mem.read_file( "rfile.txt", 0 , CHAR2BYTE); // Example rfile.txt for reading
+        rfile_mem.read_file( "rfile.txt", 0 , STR2UINT); // Example rfile.txt for reading
         // use the appropiate "conv_format" tag for your file kind from: STR2INT, STR2UINT, STR2FLOAT, CHAR2BYTE
 
-        rwnum_mem.read_file( "rwnum.txt", 0 , STR2UINT); // Example rwnum.txt for reading
+        // rwnum_mem.read_file( "rwnum.txt", 0 , STR2UINT); // Example rwnum.txt for reading
 
 /*** END OF EDITABLE SECTION ***/
 
@@ -173,10 +173,10 @@ public:
         // The function 'write_file' declaration is:
         // void write_file(const char *file_name, uint32_t address, uint32_t elem, uint32_t bits, conv_format type);
         // However, the argument bits is not used, so it may be given whatever integer vale. Be carfeul because in future versions this argument may dissapear or become effective.
-        wfile_mem.write_file( "wfile.out", 0, 12, 0, BYTE2CHAR); // Example wfile.out for writing
+        wfile_mem.write_file( "wfile.out", 0, SYS_WFILE_RAM_SIZE, 0, UINT2STR); // Example wfile.out for writing
         // use the appropiate "conv_format" tag for your file kind from: INT2STR, UINT2STR, FLOAT2STR, BYTE2CHAR
 
-        rwnum_mem.write_file( "rwnum.out", 0, SYS_RWNUM_RAM_SIZE, 0, UINT2STR); // Example rwnum.out for writing
+        // rwnum_mem.write_file( "rwnum.out", 0, SYS_RWNUM_RAM_SIZE, 0, UINT2STR); // Example rwnum.out for writing
 
 /*** END OF EDITABLE SECTION ***/
 
@@ -210,7 +210,7 @@ public:
             // Instantiate your peripherals here:
 /*** START OF EDITABLE SECTION ***/
 
-            rwnum_mem("RWNUM_MEM", RWNUM_RAM_SIZE),
+            // rwnum_mem("RWNUM_MEM", RWNUM_RAM_SIZE),
             rfile_mem("RFILE_MEM", RFILE_RAM_SIZE), // Example of file for reading
             wfile_mem("WFILE_MEM", WFILE_RAM_SIZE) // Example of file for writing
             // Remember to do not use "," after the last module instantiation
@@ -318,7 +318,7 @@ public:
         // Connect Memory modules associated to files to the TLM bus:
         bus.bind_target(rfile_mem.rw_socket, RFILE_RAM_BASE, RFILE_RAM_SIZE); // Connect the example file to read
         bus.bind_target(wfile_mem.rw_socket, WFILE_RAM_BASE, WFILE_RAM_SIZE); // Connect the example file to write
-        bus.bind_target(rwnum_mem.rw_socket, RWNUM_RAM_BASE, RWNUM_RAM_SIZE);
+        // bus.bind_target(rwnum_mem.rw_socket, RWNUM_RAM_BASE, RWNUM_RAM_SIZE);
 
 
 /*** END OF EDITABLE SECTION ***/

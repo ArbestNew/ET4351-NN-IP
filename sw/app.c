@@ -26,12 +26,15 @@
 // Debug stuff. Don't touch it!
 #define halt()            DBGC_HALT = 1
 
+// Address for save INSTRUCTION, INPUT for IP
+#define IP
+
 // Declare your peripheral poiters and initialize them to their BASE addresses:
 //uint32_t *RFILE = (uint32_t *)SYS_RFILE_RAM_BASE; // Example of a file for reading
 uint8_t *RFILE = (uint8_t *)SYS_RFILE_RAM_BASE; // Example of a file for reading in text mode
 //uint32_t *WFILE = (uint32_t *)SYS_WFILE_RAM_BASE; // Example of a file for writing
 uint8_t *WFILE = (uint8_t *)SYS_WFILE_RAM_BASE; // Example of a file for writing in text mode
-uint32_t *RWNUM = (uint32_t *)SYS_RWNUM_RAM_BASE; // Example of a file for r/w
+// uint32_t *RWNUM = (uint32_t *)SYS_RWNUM_RAM_BASE; // Example of a file for r/w
 
 int Iflag = 1; // Interruption flag
 
@@ -48,13 +51,13 @@ int main()
 
     // Example code for reading and writing a file mapped into the memory map and directly:
     // This is a text file that contain numbers:
-    uint32_t aux;
-    for (i = 0; i < SYS_RWNUM_RAM_SIZE; i++)
-    {
-        aux = RWNUM[i];
-        aux *= 3;
-        RWNUM[i] = aux;
-    }
+    // uint32_t aux;
+    // for (i = 0; i < SYS_RWNUM_RAM_SIZE; i++)
+    // {
+    //     aux = RWNUM[i];
+    //     aux *= 3;
+    //     RWNUM[i] = aux;
+    // }
 
     // Example code for reading a file mapped into the memory map and directly
     // send its contents to a input port of an IP connected to the AXI bus:
@@ -81,7 +84,7 @@ int main()
 
     while (Iflag); // Whait for an interruption
 
-    print_str("***********\nIRQ received\n***********\n ");
+    print_str("\n\n***********\nIRQ received\n***********\n\n");
 
     //// Example code for printing the data returned by the IP:
     //print_str("Read from the IP:\n");
@@ -136,4 +139,51 @@ void handle_interrupt(void)
     //print_str("***********\nIRQ received\n***********\n "); // There should not be print calls on interrupt handles
     Iflag  = 0;
 }
+
+void IP_RUN_ADD(void) {
+    print_str("\n************\nRUN IP INSTUCTION -> ADD\n");
+    SYS_MEM32(SYS_AXI_BASE + IP_INS_OFFSET) = IP_INS_ADD;
+    while (Iflag);
+    print_str("Finished\n************\n")
+}
+
+void IP_RUN_MULT(void) {
+    print_str("\n************\nRUN IP INSTUCTION -> MULT\n");
+    SYS_MEM32(SYS_AXI_BASE + IP_INS_OFFSET) = IP_INS_MULT;
+    while (Iflag);
+    print_str("Finished\n************\n")
+}
+
+void IP_RUN_MIRROR(void) {
+    print_str("\n************\nRUN IP INSTUCTION -> MIRROR\n");
+    SYS_MEM32(SYS_AXI_BASE + IP_INS_OFFSET) = IP_INS_MIRROR;
+    while (Iflag);
+    print_str("Finished\n************\n")
+}
+
+void IP_LOAD_INPUT(void) {
+    print_str("\n************\nLOAD IP INPUT MEM\n");
+    uint32_t i = 0;
+    for (i = 0; i < RFILE_SIZE; i++) {
+        SYS_MEM32((SYS_AXI_BASE) + IP_IN_OFFSET + (4*i)) = RFILE[i];
+    }
+    print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET); 
+    print_str(" -> "); 
+    print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET + (4*i));
+    print_str("LOAD FINISHED FROM RFILE\n************\n")
+}
+
+void IP_SAVE_OUTPUT(void) {
+    print_str("\n************\nSAVE IP OUTPUT MEM\n");
+    uint32_t i = 0;
+    for (i = 0; i < WFILE_SIZE; i++) {
+        WFILE[i] = SYS_MEM32((SYS_AXI_BASE) + IP_OUT_OFFSET + (4*i));
+    }
+    print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET); 
+    print_str(" -> "); 
+    print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET + (4*i));
+    print_str("SAVE FINISHED TO WFILE\n************\n")
+}
+
+
 

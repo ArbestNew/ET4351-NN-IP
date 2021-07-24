@@ -247,7 +247,7 @@ void myip::read_cthread()
                 break;
             }
             // Output port:
-            case  IPOUT_OFFSET ... (IPOUT_OFFSET+IPOUT_SIZE*4)-1 :
+            case  IP_OUT_OFFSET ... (IP_OUT_OFFSET+IP_OUT_SIZE*4)-1 :
             {
                 // Addapt the address:
 #if IP_IN_OFFSET >= IP_OUT_SIZE*4

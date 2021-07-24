@@ -3,10 +3,10 @@ sh clean.sh
 
 cd sw
 pwd
-make
+make | tee ../soft_sw_make_result
 
 cd ../tb
 pwd
-make
+make | tee ../soft_tb_make_result
 
-./sctop ../sw/app.elf | tee ../soft_result
+./sctop ../sw/app.elf | tee ../soft_sim_result

@@ -63,7 +63,7 @@ int main()
     // send its contents to a input port of an IP connected to the AXI bus:
     for (i = 0; i < RFILE_SIZE; i++)
     {
-        SYS_MEM32((SYS_AXI_BASE + IPIN_OFFSET + (4*i) )) = RFILE[i];
+        SYS_MEM32((SYS_AXI_BASE + IP_IN_OFFSET + (4*i) )) = RFILE[i];
     }
 
     // Example code for printing the data read from file:
@@ -102,7 +102,7 @@ int main()
     // directly read from an output port of an IP connected to the AXI bus:
     for (i = 0; i < WFILE_SIZE; i++)
     {
-        WFILE[i] = SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) ));
+        WFILE[i] = SYS_MEM32((SYS_AXI_BASE + IP_OUT_OFFSET + (4*i) ));
     }
 
     // Example code for printing the data returned by the IP:
@@ -144,21 +144,21 @@ void IP_RUN_ADD(void) {
     print_str("\n************\nRUN IP INSTUCTION -> ADD\n");
     SYS_MEM32(SYS_AXI_BASE + IP_INS_OFFSET) = IP_INS_ADD;
     while (Iflag);
-    print_str("Finished\n************\n")
+    print_str("Finished\n************\n");
 }
 
 void IP_RUN_MULT(void) {
     print_str("\n************\nRUN IP INSTUCTION -> MULT\n");
     SYS_MEM32(SYS_AXI_BASE + IP_INS_OFFSET) = IP_INS_MULT;
     while (Iflag);
-    print_str("Finished\n************\n")
+    print_str("Finished\n************\n");
 }
 
 void IP_RUN_MIRROR(void) {
     print_str("\n************\nRUN IP INSTUCTION -> MIRROR\n");
     SYS_MEM32(SYS_AXI_BASE + IP_INS_OFFSET) = IP_INS_MIRROR;
     while (Iflag);
-    print_str("Finished\n************\n")
+    print_str("Finished\n************\n");
 }
 
 void IP_LOAD_INPUT(void) {
@@ -170,7 +170,7 @@ void IP_LOAD_INPUT(void) {
     print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET); 
     print_str(" -> "); 
     print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET + (4*i));
-    print_str("LOAD FINISHED FROM RFILE\n************\n")
+    print_str("LOAD FINISHED FROM RFILE\n************\n");
 }
 
 void IP_SAVE_OUTPUT(void) {
@@ -182,7 +182,7 @@ void IP_SAVE_OUTPUT(void) {
     print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET); 
     print_str(" -> "); 
     print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET + (4*i));
-    print_str("SAVE FINISHED TO WFILE\n************\n")
+    print_str("SAVE FINISHED TO WFILE\n************\n");
 }
 
 

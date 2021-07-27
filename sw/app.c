@@ -163,12 +163,13 @@ void IP_LOAD_INPUT(void) {
     print_str("\n************\nLOAD IP INPUT MEM\n");
     uint32_t i = 0;
     for (i = 0; i < RFILE_SIZE; i++) {
+        print_uint(RFILE[i]); print_str(" ");
         SYS_MEM32((SYS_AXI_BASE) + IP_IN_OFFSET + (4*i)) = RFILE[i];
     }
     print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET); 
     print_str(" -> "); 
     print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET + (4*i));
-    print_str("LOAD FINISHED FROM RFILE\n************\n");
+    print_str("      LOAD FINISHED FROM RFILE\n************\n\n");
 }
 
 void IP_SAVE_OUTPUT(void) {
@@ -194,7 +195,7 @@ void PRINT_INPUT(uint8_t printInTerminal) {
             print_str("******END INPUT DATA (");print_int(i);print_str(")\n");
             return;
         }
-        print_int(RFILE[i]); print_str('\t');
+        print_uint(RFILE[i]); print_str(" ");
     }
 }
 

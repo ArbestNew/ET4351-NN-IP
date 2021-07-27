@@ -170,6 +170,9 @@ void IP_LOAD_INPUT(void) {
     print_str(" -> "); 
     print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET + (4*i));
     print_str("      LOAD FINISHED FROM RFILE\n************\n\n");
+    for (i = 0; i < RFILE_SIZE; i++) {
+        print_uint(RFILE[i]); print_str(" ");
+    }
 }
 
 void IP_SAVE_OUTPUT(void) {

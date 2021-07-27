@@ -26,8 +26,8 @@
 // Debug stuff. Don't touch it!
 #define halt()            DBGC_HALT = 1
 
-// Address for save INSTRUCTION, INPUT for IP
-#define IP
+// debug setting
+#define PRINT_INPUT_DETAIL 1
 
 // Declare your peripheral poiters and initialize them to their BASE addresses:
 //uint32_t *RFILE = (uint32_t *)SYS_RFILE_RAM_BASE; // Example of a file for reading
@@ -61,22 +61,20 @@ int main()
 
     // Example code for reading a file mapped into the memory map and directly
     // send its contents to a input port of an IP connected to the AXI bus:
-    for (i = 0; i < RFILE_SIZE; i++)
-    {
-        SYS_MEM32((SYS_AXI_BASE + IP_IN_OFFSET + (4*i) )) = RFILE[i];
-    }
+    IP_LOAD_INPUT();
 
     // Example code for printing the data read from file:
-    print_str("[Read] rfile.txt file:\n");
-    for (i = 0; i < 20/* RFILE_SIZE*4 too long */; i++)
-    {
-        if( RFILE[i] == '\0' )
-        {
-            print_str("\nFound end of line at i = "); print_int(i); print_str("\n");
-            break;
-        }
-        print_char((char)RFILE[i]);
-    }
+    // print_str("[Read] rfile.txt file:\n");
+    // for (i = 0; i < 20/* RFILE_SIZE*4 too long */; i++)
+    // {
+    //     if( RFILE[i] == '\0' )
+    //     {
+    //         print_str("\nFound end of line at i = "); print_int(i); print_str("\n");
+    //         break;
+    //     }
+    //     print_char((char)RFILE[i]);
+    // }
+    PRINT_INPUT(PRINT_INPUT_DETAIL);
 
     // Example code of writing in an IP register a starting run flag:
     SYS_MEM32((SYS_AXI_BASE ) ) = 0x80; // Example run IP flag
@@ -183,6 +181,21 @@ void IP_SAVE_OUTPUT(void) {
     print_str(" -> "); 
     print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET + (4*i));
     print_str("SAVE FINISHED TO WFILE\n************\n");
+}
+
+void PRINT_INPUT(uint8_t printInTerminal) {
+    if (printInTerminal != 1) {
+        return;
+    }
+    uint32_t i = 0;
+    print_str("******INPUT DATA:\n");
+    for (i = 0; i < RFILE_SIZE; i++) {
+        if (RFILE[i] == '\0') {
+            print_str("******END INPUT DATA (");print_int(i);print_str(")\n");
+            return;
+        }
+        print_int(RFILE[i]); print_str('\t');
+    }
 }
 
 

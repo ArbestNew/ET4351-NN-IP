@@ -30,10 +30,10 @@
 #define PRINT_INPUT_DETAIL 1
 
 // Declare your peripheral poiters and initialize them to their BASE addresses:
-//uint32_t *RFILE = (uint32_t *)SYS_RFILE_RAM_BASE; // Example of a file for reading
-uint8_t *RFILE = (uint8_t *)SYS_RFILE_RAM_BASE; // Example of a file for reading in text mode
-//uint32_t *WFILE = (uint32_t *)SYS_WFILE_RAM_BASE; // Example of a file for writing
-uint8_t *WFILE = (uint8_t *)SYS_WFILE_RAM_BASE; // Example of a file for writing in text mode
+uint32_t *RFILE = (uint32_t *)SYS_RFILE_RAM_BASE; // Example of a file for reading
+// uint8_t *RFILE = (uint8_t *)SYS_RFILE_RAM_BASE; // Example of a file for reading in text mode
+uint32_t *WFILE = (uint32_t *)SYS_WFILE_RAM_BASE; // Example of a file for writing
+// uint8_t *WFILE = (uint8_t *)SYS_WFILE_RAM_BASE; // Example of a file for writing in text mode
 // uint32_t *RWNUM = (uint32_t *)SYS_RWNUM_RAM_BASE; // Example of a file for r/w
 
 int Iflag = 1; // Interruption flag

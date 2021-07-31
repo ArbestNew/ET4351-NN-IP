@@ -47,6 +47,11 @@ int main()
     /*** Place your code here: ***/
     // Example code:
     uint32_t i = 0;
+    // add some delay before running real code
+    for (i = 0; i < 100; i++)
+    {
+        uint32_t j = 0;
+    }
 
     // Example code for reading and writing a file mapped into the memory map and directly:
     // This is a text file that contain numbers:

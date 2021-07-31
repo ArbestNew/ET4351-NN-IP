@@ -27,7 +27,8 @@
 #define halt()            DBGC_HALT = 1
 
 // debug setting
-#define PRINT_INPUT_DETAIL 1
+#define PRINT_DATA_DETAIL 1
+
 
 // Declare your peripheral poiters and initialize them to their BASE addresses:
 uint32_t *RFILE = (uint32_t *)SYS_RFILE_RAM_BASE; // Example of a file for reading
@@ -61,8 +62,8 @@ int main()
 
     // Example code for reading a file mapped into the memory map and directly
     // send its contents to a input port of an IP connected to the AXI bus:
-    IP_LOAD_INPUT();
-
+    SEND_IP_INPUT();
+    PRINT_INPUT(PRINT_DATA_DETAIL);
     // Example code for printing the data read from file:
     // print_str("[Read] rfile.txt file:\n");
     // for (i = 0; i < 20/* RFILE_SIZE*4 too long */; i++)
@@ -74,7 +75,6 @@ int main()
     //     }
     //     print_char((char)RFILE[i]);
     // }
-    PRINT_INPUT(PRINT_INPUT_DETAIL);
 
     // Example code of writing in an IP register a starting run flag:
     SYS_MEM32((SYS_AXI_BASE ) ) = 0x80; // Example run IP flag
@@ -98,27 +98,29 @@ int main()
 
     // Example code for writing a file mapped into the memory map with data
     // directly read from an output port of an IP connected to the AXI bus:
-    for (i = 0; i < WFILE_SIZE; i++)
-    {
-        WFILE[i] = SYS_MEM32((SYS_AXI_BASE + IP_OUT_OFFSET + (4*i) ));
-    }
+    // for (i = 0; i < WFILE_SIZE; i++)
+    // {
+    //     WFILE[i] = SYS_MEM32((SYS_AXI_BASE + IP_OUT_OFFSET + (4*i) ));
+    // }
+    RECEIVE_IP_OUTPUT();
+    PRINT_OUTPUT(PRINT_DATA_DETAIL);
 
     // Example code for printing the data returned by the IP:
-    print_str("Read from the IP:\n");
-    for (i = 0; i < 20/* WFILE_SIZE*4 too long */; i++)
-    {
-        //if( (char)SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) )) == '\0' )
-        if ( WFILE[i] == '\0' )
-        {
-            print_str("\nFound end of line at i = "); print_int(i); print_str("\n");
-            break;
-        }
-        print_char(WFILE[i]);
-        //print_char((char)SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) )));
-        //print_int(SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) ))); print_str(" ");
-    }
+    // print_str("Read from the IP:\n");
+    // for (i = 0; i < 20/* WFILE_SIZE*4 too long */; i++)
+    // {
+    //     //if( (char)SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) )) == '\0' )
+    //     if ( WFILE[i] == '\0' )
+    //     {
+    //         print_str("\nFound end of line at i = "); print_int(i); print_str("\n");
+    //         break;
+    //     }
+    //     print_char(WFILE[i]);
+    //     //print_char((char)SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) )));
+    //     //print_int(SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) ))); print_str(" ");
+    // }
 
-    print_str("IP Done\n");
+    print_str("IP I/O Done\n");
 
     print_str("***********\nEVERYTHING IS DONE\n***********\n ");
 
@@ -159,7 +161,7 @@ void IP_RUN_MIRROR(void) {
     print_str("Finished\n************\n");
 }
 
-void IP_LOAD_INPUT(void) {
+void SEND_IP_INPUT(void) {
     print_str("\n************\nLOAD IP INPUT MEM\n");
     uint32_t i = 0;
     for (i = 0; i < RFILE_SIZE; i++) {
@@ -169,13 +171,13 @@ void IP_LOAD_INPUT(void) {
     print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET); 
     print_str(" -> "); 
     print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET + (4*i));
-    print_str("      LOAD FINISHED FROM RFILE\n************\n\n");
+    print_str("      RFILE -> IP DONE\n************\n\n");
     for (i = 0; i < RFILE_SIZE; i++) {
         print_uint(RFILE[i]); print_str(" ");
     }
 }
 
-void IP_SAVE_OUTPUT(void) {
+void RECEIVE_IP_OUTPUT(void) {
     print_str("\n************\nSAVE IP OUTPUT MEM\n");
     uint32_t i = 0;
     for (i = 0; i < WFILE_SIZE; i++) {
@@ -184,7 +186,10 @@ void IP_SAVE_OUTPUT(void) {
     print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET); 
     print_str(" -> "); 
     print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET + (4*i));
-    print_str("SAVE FINISHED TO WFILE\n************\n");
+    print_str("      IP -> WFILE DONE\n************\n\n");
+    for (i = 0; i < WFILE_SIZE; i++) {
+        print_uint(WFILE[i]); print_str(" ");
+    }
 }
 
 void PRINT_INPUT(uint8_t printInTerminal) {
@@ -199,6 +204,21 @@ void PRINT_INPUT(uint8_t printInTerminal) {
             return;
         }
         print_uint(RFILE[i]); print_str(" ");
+    }
+}
+
+void PRINT_OUTPUT(uint8_t printInTerminal) {
+    if (printInTerminal != 1) {
+        return;
+    }
+    uint32_t i = 0;
+    print_str("******OUTPUT DATA:\n");
+    for (i = 0; i < WFILE_SIZE; i++) {
+        if (WFILE[i] == '\0') {
+            print_str("******END OUTPUT DATA (");print_int(i);print_str(")\n");
+            return;
+        }
+        print_uint(WFILE[i]); print_str(" ");
     }
 }
 

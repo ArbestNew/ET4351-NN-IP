@@ -187,8 +187,8 @@ void SEND_IP_INPUT(void)
     uint32_t i = 0;
     for (i = 0; i < RFILE_SIZE; i++)
     {
-        print_uint(RFILE[i]);
-        print_str(" ");
+        // print_uint(RFILE[i]);
+        // print_str(" ");
         SYS_MEM32((SYS_AXI_BASE) + IP_IN_OFFSET + (4 * i)) = RFILE[i];
     }
 
@@ -229,7 +229,8 @@ void PRINT_INPUT(void)
     {
         if (RFILE[i] == '\0')
         {
-            print_str("\n");
+            print_str("\nTOTAL PRINTED: ");
+            print_uint(i);
             break;
         }
         print_uint(RFILE[i]);
@@ -248,7 +249,8 @@ void PRINT_OUTPUT(void)
     {
         if (WFILE[i] == '\0')
         {
-            print_str("\n");
+            print_str("\nTOTAL PRINTED: ");
+            print_uint(i);
             break;
         }
         print_uint(WFILE[i]);

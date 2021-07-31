@@ -22,13 +22,11 @@
 #include <stdlib.h>
 // Add your libraries here:
 
-
 // Debug stuff. Don't touch it!
-#define halt()            DBGC_HALT = 1
+#define halt() DBGC_HALT = 1
 
 // debug setting
 #define PRINT_DATA_DETAIL 1
-
 
 // Declare your peripheral poiters and initialize them to their BASE addresses:
 uint32_t *RFILE = (uint32_t *)SYS_RFILE_RAM_BASE; // Example of a file for reading
@@ -44,7 +42,7 @@ int main()
 
     enableIRQ(); // Enable interruptions
 
-    print_str("\n\n ===== Software begins ===== \n\n");
+    print_str("\n\n ===== SOFTWARE BEGIN ===== \n\n");
 
     /*** Place your code here: ***/
     // Example code:
@@ -63,7 +61,10 @@ int main()
     // Example code for reading a file mapped into the memory map and directly
     // send its contents to a input port of an IP connected to the AXI bus:
     SEND_IP_INPUT();
-    PRINT_INPUT(PRINT_DATA_DETAIL);
+
+#if PRINT_DATA_DETAIL
+    PRINT_INPUT();
+#endif
     // Example code for printing the data read from file:
     // print_str("[Read] rfile.txt file:\n");
     // for (i = 0; i < 20/* RFILE_SIZE*4 too long */; i++)
@@ -77,23 +78,24 @@ int main()
     // }
 
     // Example code of writing in an IP register a starting run flag:
-    SYS_MEM32((SYS_AXI_BASE ) ) = 0x80; // Example run IP flag
-    print_str("[Write] IP \n");
+    SYS_MEM32((SYS_AXI_BASE)) = 0x80; // Example run IP flag
+    print_str("\nSEND IP RUN!\n");
 
-    while (Iflag); // Whait for an interruption
+    while (Iflag)
+        ; // Whait for an interruption
 
-    print_str("\n\n***********\nIRQ received\n***********\n\n");
+    print_str("\nRECEIVE IP IRQ!\n");
 
     //// Example code for printing the data returned by the IP:
     //print_str("Read from the IP:\n");
     //for(i = 0; i < 20/* WFILE_SIZE too long */; i++)
     //{
-        //if( (char)SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) )) == '\0' )
-        //{
-            //print_str("Found end of line at i = "); print_int(i); print_str("\n");
-            //break;
-        //}
-        //print_char((char)SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) )));
+    //if( (char)SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) )) == '\0' )
+    //{
+    //print_str("Found end of line at i = "); print_int(i); print_str("\n");
+    //break;
+    //}
+    //print_char((char)SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) )));
     //}
 
     // Example code for writing a file mapped into the memory map with data
@@ -103,7 +105,9 @@ int main()
     //     WFILE[i] = SYS_MEM32((SYS_AXI_BASE + IP_OUT_OFFSET + (4*i) ));
     // }
     RECEIVE_IP_OUTPUT();
-    PRINT_OUTPUT(PRINT_DATA_DETAIL);
+#if PRINT_DATA_DETAIL
+    PRINT_OUTPUT();
+#endif
 
     // Example code for printing the data returned by the IP:
     // print_str("Read from the IP:\n");
@@ -120,13 +124,13 @@ int main()
     //     //print_int(SYS_MEM32((SYS_AXI_BASE + IPOUT_OFFSET + (4*i) ))); print_str(" ");
     // }
 
-    print_str("IP I/O Done\n");
+    print_str("\nIP I/O Done!\n");
 
-    print_str("***********\nEVERYTHING IS DONE\n***********\n ");
+    print_str("\n\n ===== SOFTWARE END ===== \n\n");
 
     halt();
 
-    return(1);
+    return (1);
 }
 
 // Example of interrupt handler function:
@@ -135,92 +139,112 @@ int main()
 void handle_interrupt(void)
 {
     disableIRQ();
-    SYS_MEM32((SYS_AXI_BASE ) +0) = 0x00; // stop IP
+    SYS_MEM32((SYS_AXI_BASE) + 0) = 0x00; // stop IP
     //print_str("***********\nIRQ received\n***********\n "); // There should not be print calls on interrupt handles
-    Iflag  = 0;
+    Iflag = 0;
 }
 
-void IP_RUN_ADD(void) {
+void IP_RUN_ADD(void)
+{
     print_str("\n************\nRUN IP INSTUCTION -> ADD\n");
     SYS_MEM32(SYS_AXI_BASE + IP_INS_OFFSET) = IP_INS_ADD;
-    while (Iflag);
+    while (Iflag)
+        ;
     print_str("Finished\n************\n");
 }
 
-void IP_RUN_MULT(void) {
+void IP_RUN_MULT(void)
+{
     print_str("\n************\nRUN IP INSTUCTION -> MULT\n");
     SYS_MEM32(SYS_AXI_BASE + IP_INS_OFFSET) = IP_INS_MULT;
-    while (Iflag);
+    while (Iflag)
+        ;
     print_str("Finished\n************\n");
 }
 
-void IP_RUN_MIRROR(void) {
+void IP_RUN_MIRROR(void)
+{
     print_str("\n************\nRUN IP INSTUCTION -> MIRROR\n");
     SYS_MEM32(SYS_AXI_BASE + IP_INS_OFFSET) = IP_INS_MIRROR;
-    while (Iflag);
+    while (Iflag)
+        ;
     print_str("Finished\n************\n");
 }
 
-void SEND_IP_INPUT(void) {
-    print_str("\n************\nLOAD IP INPUT MEM\n");
+void SEND_IP_INPUT(void)
+{
+    print_str("\nSEND IP INPUT:");
+    print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET);
+    print_str(" -> ");
+    print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET + 4 * RFILE_SIZE);
+
     uint32_t i = 0;
-    for (i = 0; i < RFILE_SIZE; i++) {
-        print_uint(RFILE[i]); print_str(" ");
-        SYS_MEM32((SYS_AXI_BASE) + IP_IN_OFFSET + (4*i)) = RFILE[i];
+    for (i = 0; i < RFILE_SIZE; i++)
+    {
+        print_uint(RFILE[i]);
+        print_str(" ");
+        SYS_MEM32((SYS_AXI_BASE) + IP_IN_OFFSET + (4 * i)) = RFILE[i];
     }
-    print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET); 
-    print_str(" -> "); 
-    print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET + (4*i));
-    print_str("      RFILE -> IP DONE\n************\n\n");
-    for (i = 0; i < RFILE_SIZE; i++) {
-        print_uint(RFILE[i]); print_str(" ");
-    }
+
+    // print_str("      RFILE -> IP DONE\n************\n\n");
+    // for (i = 0; i < RFILE_SIZE; i++) {
+    //     print_uint(RFILE[i]); print_str(" ");
+    // }
 }
 
-void RECEIVE_IP_OUTPUT(void) {
-    print_str("\n************\nSAVE IP OUTPUT MEM\n");
+void RECEIVE_IP_OUTPUT(void)
+{
+    print_str("\nRECEIVE IP OUTPUT:\n");
+    print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET);
+    print_str(" -> ");
+    print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET + 4 * WFILE_SIZE);
+
     uint32_t i = 0;
-    for (i = 0; i < WFILE_SIZE; i++) {
-        WFILE[i] = SYS_MEM32((SYS_AXI_BASE) + IP_OUT_OFFSET + (4*i));
+    for (i = 0; i < WFILE_SIZE; i++)
+    {
+        WFILE[i] = SYS_MEM32((SYS_AXI_BASE) + IP_OUT_OFFSET + (4 * i));
     }
-    print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET); 
-    print_str(" -> "); 
-    print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET + (4*i));
-    print_str("      IP -> WFILE DONE\n************\n\n");
-    for (i = 0; i < WFILE_SIZE; i++) {
-        print_uint(WFILE[i]); print_str(" ");
-    }
+
+    // print_str("      IP -> WFILE DONE\n************\n\n");
+    // for (i = 0; i < WFILE_SIZE; i++) {
+    //     print_uint(WFILE[i]); print_str(" ");
+    // }
 }
 
-void PRINT_INPUT(uint8_t printInTerminal) {
-    if (printInTerminal != 1) {
-        return;
-    }
+void PRINT_INPUT(void)
+{
+
     uint32_t i = 0;
-    print_str("******INPUT DATA:\n");
-    for (i = 0; i < RFILE_SIZE; i++) {
-        if (RFILE[i] == '\0') {
-            print_str("******END INPUT DATA (");print_int(i);print_str(")\n");
-            return;
+    print_str("\nINPUT DATA (");
+    print_uint(RFILE_SIZE);
+    print_str("):\n");
+    for (i = 0; i < RFILE_SIZE; i++)
+    {
+        if (RFILE[i] == '\0')
+        {
+            print_str("\n");
+            break;
         }
-        print_uint(RFILE[i]); print_str(" ");
+        print_uint(RFILE[i]);
+        print_str(" ");
     }
 }
 
-void PRINT_OUTPUT(uint8_t printInTerminal) {
-    if (printInTerminal != 1) {
-        return;
-    }
+void PRINT_OUTPUT(void)
+{
+
     uint32_t i = 0;
-    print_str("******OUTPUT DATA:\n");
-    for (i = 0; i < WFILE_SIZE; i++) {
-        if (WFILE[i] == '\0') {
-            print_str("******END OUTPUT DATA (");print_int(i);print_str(")\n");
-            return;
+    print_str("\nINPUT DATA (");
+    print_uint(RFILE_SIZE);
+    print_str("):\n");
+    for (i = 0; i < RFILE_SIZE; i++)
+    {
+        if (RFILE[i] == '\0')
+        {
+            print_str("\n");
+            break;
         }
-        print_uint(WFILE[i]); print_str(" ");
+        print_uint(RFILE[i]);
+        print_str(" ");
     }
 }
-
-
-

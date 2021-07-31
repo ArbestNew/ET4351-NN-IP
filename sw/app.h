@@ -7,8 +7,8 @@
 // Define your parameters here:
 
 // Example: sizes of files:
-#define RFILE_SIZE 0x10 // Example file for saving input
-#define WFILE_SIZE 0x10 // Example file for saving output
+#define RFILE_SIZE 0x0A // Example file for saving input
+#define WFILE_SIZE 0x0A // Example file for saving output
 
 // Example: offsets (to the SYS_AXI_BASE address) and sizes for your IP ports:
 #define IP_INS_OFFSET  0x10000 // IP INSTRUCTION PORT OFFSET

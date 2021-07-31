@@ -177,6 +177,7 @@ void SEND_IP_INPUT(void)
     print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET);
     print_str(" -> ");
     print_hex_uint((SYS_AXI_BASE) + IP_IN_OFFSET + 4 * RFILE_SIZE);
+    print_str("\n");
 
     uint32_t i = 0;
     for (i = 0; i < RFILE_SIZE; i++)
@@ -198,6 +199,7 @@ void RECEIVE_IP_OUTPUT(void)
     print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET);
     print_str(" -> ");
     print_hex_uint((SYS_AXI_BASE) + IP_OUT_OFFSET + 4 * WFILE_SIZE);
+    print_str("\n");
 
     uint32_t i = 0;
     for (i = 0; i < WFILE_SIZE; i++)
@@ -234,17 +236,17 @@ void PRINT_OUTPUT(void)
 {
 
     uint32_t i = 0;
-    print_str("\nINPUT DATA (");
-    print_uint(RFILE_SIZE);
+    print_str("\nOUTPUT DATA (");
+    print_uint(WFILE_SIZE);
     print_str("):\n");
-    for (i = 0; i < RFILE_SIZE; i++)
+    for (i = 0; i < WFILE_SIZE; i++)
     {
-        if (RFILE[i] == '\0')
+        if (WFILE[i] == '\0')
         {
             print_str("\n");
             break;
         }
-        print_uint(RFILE[i]);
+        print_uint(WFILE[i]);
         print_str(" ");
     }
 }

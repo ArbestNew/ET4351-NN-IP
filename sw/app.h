@@ -15,8 +15,8 @@
 #define IP_INS_OFFSET  0x10000 // IP INSTRUCTION PORT OFFSET
 #define IP_IN_OFFSET   0x20000 // IP INPUT PORT OFFSET
 #define IP_OUT_OFFSET  0x40000 // IP OUTPUT PORT OFFSET
-#define IP_IN_SIZE 0x0A         
-#define IP_OUT_SIZE 0x0A
+#define IP_IN_SIZE 0x0A     // should same as rfile size    
+#define IP_OUT_SIZE 0x0A    // should same as wfile size  
 
 // INSTRUCTION CODE FOR IP
 #define IP_INS_RESET 0

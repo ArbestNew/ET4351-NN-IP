@@ -229,13 +229,13 @@ void PRINT_INPUT(void)
     {
         if (RFILE[i] == '\0')
         {
-            print_str("\nTOTAL PRINTED: ");
-            print_uint(i);
             break;
         }
         print_uint(RFILE[i]);
         print_str(" ");
     }
+    print_str("\nTOTAL PRINTED: ");
+    print_uint(i);
 }
 
 void PRINT_OUTPUT(void)
@@ -249,11 +249,11 @@ void PRINT_OUTPUT(void)
     {
         if (WFILE[i] == '\0')
         {
-            print_str("\nTOTAL PRINTED: ");
-            print_uint(i);
             break;
         }
         print_uint(WFILE[i]);
         print_str(" ");
     }
+    print_str("\nTOTAL PRINTED: ");
+    print_uint(i);
 }

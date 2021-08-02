@@ -247,10 +247,10 @@ void PRINT_OUTPUT(void)
     print_str("):\n");
     for (i = 0; i < WFILE_SIZE; i++)
     {
-        if (WFILE[i] == '\0')
-        {
-            break;
-        }
+        // if (WFILE[i] == '\0')
+        // {
+        //     break;
+        // }
         print_uint(WFILE[i]);
         print_str(" ");
     }

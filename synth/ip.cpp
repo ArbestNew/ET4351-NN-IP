@@ -132,7 +132,7 @@ void myip::write_cthread()
                     // You can call your computation functions here:
 
                     // Dummy example that simply copy inputs into outputs:
-                    for(int i=0; i<IP_IN_SIZE; i++)
+                    for(int i=0; i<IPIN_SIZE; i++)
                     {
                         outbuff[i] = inbuff[i];
                     }
@@ -150,12 +150,12 @@ void myip::write_cthread()
                 break;
             }
             // Input port:
-            case  IP_IN_OFFSET ... IP_OUT_OFFSET-1 :
+            case  IPIN_OFFSET ... IPOUT_OFFSET-1 :
             {
                 // Addapt the address:
-#if IP_IN_OFFSET >= IP_OUT_SIZE*4
+#if IPIN_OFFSET >= IPOUT_SIZE*4
                 // Bitwise operation to avoid a subtraction. However it will not work if the SYS_AXI_SIZE > SYS_AXI_BASE
-                waddr = ( axi_waddr ^ IP_IN_OFFSET ) >> 2;
+                waddr = ( axi_waddr ^ IPIN_OFFSET ) >> 2;
                 //waddr = ( axi_waddr & 0x00FFFFFF ) >> 2;
 #else
                 waddr = ( axi_waddr - IPIN_OFFSET ) >> 2;
@@ -247,17 +247,17 @@ void myip::read_cthread()
                 break;
             }
             // Output port:
-            case  IP_OUT_OFFSET ... (IP_OUT_OFFSET+IP_OUT_SIZE*4)-1 :
+            case  IPOUT_OFFSET ... (IPOUT_OFFSET+IPOUT_SIZE*4)-1 :
             {
                 // Addapt the address:
-#if IP_IN_OFFSET >= IP_OUT_SIZE*4
+#if IPIN_OFFSET >= IPOUT_SIZE*4
                 // Bitwise operation to avoid a subtraction. However it will not work if the SYS_AXI_SIZE > SYS_AXI_BASE
-                raddr = ( axi_raddr ^ IP_OUT_OFFSET ) >> 2;
+                raddr = ( axi_raddr ^ IPOUT_OFFSET ) >> 2;
                 //raddr = ( axi_raddr & 0x00FFFFFF ) >> 2;
 #else
-                raddr = ( axi_raddr - IP_OUT_OFFSET ) >> 2;
+                raddr = ( axi_raddr - IPOUT_OFFSET ) >> 2;
 #endif
-                raddr = (axi_raddr - IP_OUT_OFFSET) >> 2; // Addapt the address
+                raddr = (axi_raddr - IPOUT_OFFSET) >> 2; // Addapt the address
                 //wait(); // It may be necessary to break a critical path, but it will also complicates the FSM which may cause side problems
                 axi_dataout = outbuff[raddr]; // Put data of the outbuff in a local variable. You may need to format properly the data.
                 break;

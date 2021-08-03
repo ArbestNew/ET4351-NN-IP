@@ -59,13 +59,13 @@
 # The pre-processor and compiler options.
 MY_CFLAGS = 
 # The linker options.
-MY_LIBS   =  -lm
+MY_LIBS   = 
 
 # The pre-processor options used by the cpp (man cpp for more).
 CPPFLAGS  = -Wall
 
 # The options used in linking as well as in any direct use of ld.
-LDFLAGS   =  -T app.ld  -nostartfiles -Wl,--build-id=none
+LDFLAGS   =  -T app.ld -nostdlib 
 
 # The directories in which source files reside.
 # If not specified, only the current directory will be serached.
@@ -87,18 +87,22 @@ HDREXTS = .h .H .hh .hpp .HPP .h++ .hxx .hp
 
 # The pre-processor and compiler options.
 # Users can override those variables from the command line.
-CFLAGS  = -DVERBOSE  -march=armv6 -O0 
+CFLAGS  = -DVERBOSE  -march=armv6 -O0 -nostdlib 
 CXXFLAGS= -g -O0
 
-ASFLAGS  =  -march=armv6 
+ASFLAGS  = 
 
-AS   = arm-none-eabi-as
+AS     = arm-xilinx-eabi-as
+AS     = arm-none-eabi-as
+
 
 # The C program compiler.
-CC  = arm-none-eabi-gcc
+CC     = arm-xilinx-eabi-gcc
+CC     = arm-none-eabi-gcc
 
 # The C++ program compiler.
-CXX  = arm-none-eabi-gcc
+CXX    = arm-xilinx-eabi-g++
+CXX    = arm-none-eabi-g++
 
 # Un-comment the following line to compile C programs as C++ ones.
 #CC     = $(CXX)
